@@ -6,7 +6,7 @@
 /*   By: muerdoga <muerdoga@student.42kocaeli.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/31 15:02:17 by muerdoga          #+#    #+#             */
-/*   Updated: 2023/01/31 15:17:58 by muerdoga         ###   ########.fr       */
+/*   Updated: 2023/02/10 15:54:42 by muerdoga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct s_rules
 
 int						write_error(char *str);
 int						error_manager(int error);
+void					eat_control(t_rules *r, t_philosopher *p);
 
 /*
 ** ----- init.c -----

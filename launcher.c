@@ -6,7 +6,7 @@
 /*   By: muerdoga <muerdoga@student.42kocaeli.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/31 15:02:08 by muerdoga          #+#    #+#             */
-/*   Updated: 2023/01/31 15:03:54 by muerdoga         ###   ########.fr       */
+/*   Updated: 2023/02/10 15:48:39 by muerdoga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,11 @@ void	*p_thread(void *void_philosopher)
 	while (!(rules->dieded))
 	{
 		philo_eats(philo);
-		if (rules->all_ate)
+		if (rules->dieded)
+			break ;
+		if (rules->nb_eat != -1 && rules->all_ate)
+			break ;
+		if (rules->nb_eat != -1 && philo->x_ate >= rules->nb_eat)
 			break ;
 		action_print(rules, philo->id, "is sleeping");
 		smart_sleep(rules->time_sleep, rules);
@@ -71,6 +75,7 @@ void	exit_launcher(t_rules *rules, t_philosopher *philos)
 void	death_checker(t_rules *r, t_philosopher *p)
 {
 	int	i;
+	int	j;
 
 	while (!(r->all_ate))
 	{
@@ -82,17 +87,16 @@ void	death_checker(t_rules *r, t_philosopher *p)
 			{
 				action_print(r, i, "died");
 				r->dieded = 1;
+				j = -1;
+				while (++j < r->nb_philo)
+					pthread_mutex_unlock(&(r->forks[j]));
 			}
 			pthread_mutex_unlock(&(r->meal_check));
 			usleep(100);
 		}
 		if (r->dieded)
 			break ;
-		i = 0;
-		while (r->nb_eat != -1 && i < r->nb_philo && p[i].x_ate >= r->nb_eat)
-			i++;
-		if (i == r->nb_philo)
-			r->all_ate = 1;
+		eat_control(r, p);
 	}
 }
 
